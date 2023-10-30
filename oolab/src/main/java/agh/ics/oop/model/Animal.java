@@ -3,14 +3,18 @@ package agh.ics.oop.model;
 import java.util.List;
 
 public class Animal {
-    private MapDirection orientation = MapDirection.NORTH;
-    private Vector2d position = new Vector2d(2, 2);
+    private MapDirection orientation;
+    private Vector2d position;
     private List<MoveDirection> directions;
+
     public Animal() {
+        this.position = new Vector2d(2, 2);
+        this.orientation = MapDirection.NORTH;
     }
 
     public Animal(Vector2d initialPosition) {
         this.position = initialPosition;
+        this.orientation = MapDirection.NORTH;
     }
 
     public MapDirection getOrientation() {

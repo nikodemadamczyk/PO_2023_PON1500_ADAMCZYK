@@ -34,8 +34,9 @@ public class Simulation {
     public void run() {
         int maxMoves = getMaxMoves() + 1;
         for (int i = 0; i < maxMoves; i++) {
-            for (Animal animal : animals) {
-                System.out.println("Zwierzę: " + animal);
+            for (int j = 0; j < animals.size(); j++) {
+                Animal animal = animals.get(j);
+                System.out.println("Zwierzę: " + j + " " + animal);
                 List<MoveDirection> directions = animal.getDirections();
                 if (!directions.isEmpty()) {
                     MoveDirection nextMove = directions.remove(0);
