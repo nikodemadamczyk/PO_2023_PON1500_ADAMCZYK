@@ -19,10 +19,10 @@ public class IntegrationTest {
         Simulation simulation = new Simulation(directions, positions);
         simulation.run();
 
-        assertEquals(new Vector2d(3, 3), simulation.getAnimals().get(0).getPosition());
+        assertTrue(simulation.getAnimals().get(0).isAt(new Vector2d(3, 3)));
         assertEquals("Południe", simulation.getAnimals().get(0).getOrientation().toString());
 
-        assertEquals(new Vector2d(2, 3), simulation.getAnimals().get(1).getPosition());
+        assertTrue(simulation.getAnimals().get(1).isAt(new Vector2d(2, 3)));
         assertEquals("Północ", simulation.getAnimals().get(1).getOrientation().toString());
     }
 
@@ -48,7 +48,7 @@ public class IntegrationTest {
         Simulation simulation = new Simulation(directions, positions);
         simulation.run();
 
-        assertEquals(new Vector2d(2, 2), simulation.getAnimals().get(0).getPosition());
+        assertTrue(simulation.getAnimals().get(0).isAt(new Vector2d(2, 2)));
         assertEquals("Wschód", simulation.getAnimals().get(0).getOrientation().toString());
     }
 
@@ -61,6 +61,6 @@ public class IntegrationTest {
         Simulation simulation = new Simulation(directions, positions);
         simulation.run();
 
-        assertEquals(new Vector2d(2, 2), simulation.getAnimals().get(0).getPosition());
+        assertTrue(simulation.getAnimals().get(0).isAt(new Vector2d(2, 2)));
     }
 }
