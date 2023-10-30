@@ -1,11 +1,12 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.MoveDirection;
-import java.util.LinkedList;
 
+import java.util.LinkedList;
+import java.util.List;
 
 public class OptionsParser {
-    public static LinkedList<MoveDirection> parse(String[] args) {
+    public static List<MoveDirection> parse(String[] args) {
         LinkedList<MoveDirection> directions = new LinkedList<>();
 
         for (String arg : args) {
