@@ -2,6 +2,7 @@ package agh.ics.oop.model;
 
 import java.util.List;
 
+
 public class Animal {
     private MapDirection orientation;
     private Vector2d position;
@@ -34,7 +35,7 @@ public class Animal {
         this.directions = directions;
     }
 
-    public void move(MoveDirection direction) {
+    public void move(MoveDirection direction, MoveValidator moveValidator) {
         switch (direction) {
             case RIGHT:
                 orientation = orientation.next();
@@ -44,28 +45,25 @@ public class Animal {
                 break;
             case FORWARD:
                 Vector2d forwardPosition = position.add(orientation.toUnitVector());
-                if (isValidPosition(forwardPosition)) {
+                if (moveValidator.canMoveTo(forwardPosition)) {
                     position = forwardPosition;
                 }
                 break;
             case BACKWARD:
                 Vector2d backwardPosition = position.subtract(orientation.toUnitVector());
-                if (isValidPosition(backwardPosition)) {
+                if (moveValidator.canMoveTo(backwardPosition)) {
                     position = backwardPosition;
                 }
                 break;
         }
     }
 
+    @Override
     public String toString() {
-        return "Pozycja: " + position.toString() + ", Orientacja: " + orientation.toString();
+        return orientation.toString();
     }
 
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
-    }
-
-    private boolean isValidPosition(Vector2d newPosition) {
-        return newPosition.precedes(new Vector2d(4, 4)) && newPosition.follows(new Vector2d(0, 0));
     }
 }
