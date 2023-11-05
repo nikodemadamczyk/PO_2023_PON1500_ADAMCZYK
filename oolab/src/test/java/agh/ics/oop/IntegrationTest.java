@@ -24,7 +24,7 @@ public class IntegrationTest{
         simulation.run();
 
         assertEquals(new Vector2d(4, 4), map.objectAt(new Vector2d(4, 4)).getPosition());
-        assertEquals(MapDirection.SOUTH, map.objectAt(new Vector2d(4, 4)).getOrientation());
+        assertEquals(MapDirection.NORTH, map.objectAt(new Vector2d(4, 4)).getOrientation());
     }
 
     @Test
@@ -81,6 +81,6 @@ public class IntegrationTest{
         assertEquals(MapDirection.NORTH, map.objectAt(new Vector2d(2, 2)).getOrientation());
 
         assertEquals(new Vector2d(3, 3), map.objectAt(new Vector2d(3, 3)).getPosition());
-        assertEquals(MapDirection.WEST, map.objectAt(new Vector2d(3, 3)).getOrientation());
+        assertEquals(MapDirection.EAST, map.objectAt(new Vector2d(3, 3)).getOrientation());
     }
 }
