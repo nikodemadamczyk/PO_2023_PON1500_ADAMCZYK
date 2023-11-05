@@ -1,6 +1,8 @@
 package agh.ics.oop.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RectangularMap implements WorldMap {
@@ -13,6 +15,10 @@ public class RectangularMap implements WorldMap {
         this.height = height;
     }
 
+    @Override
+    public List<Animal> getAnimals() {
+        return new ArrayList<>(animals.values());
+    }
 
     @Override
     public boolean place(Animal animal) {
@@ -23,17 +29,17 @@ public class RectangularMap implements WorldMap {
         return false;
     }
 
+
     @Override
     public void move(Animal animal, MoveDirection direction) {
-        if (animals.containsKey(animal.getPosition())) {
-            Vector2d newPosition = animal.getPosition().add(animal.getOrientation().toUnitVector());
-            if (canMoveTo(newPosition) && !isOccupied(newPosition)) {
-                animals.remove(animal.getPosition());
-                animal.move(direction, this);
-                animals.put(animal.getPosition(), animal);
-            }
+        Vector2d previousPosition = animal.getPosition();
+        if (animal.move(direction, this)) {
+            animals.remove(previousPosition, animal);
+            Vector2d newPosition = animal.getPosition();
+            animals.put(newPosition, animal);
         }
     }
+
 
     @Override
     public boolean isOccupied(Vector2d position) {
@@ -47,7 +53,7 @@ public class RectangularMap implements WorldMap {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return position.precedes(new Vector2d(width - 1, height - 1)) && position.follows(new Vector2d(0, 0));
+        return position.precedes(new Vector2d(width - 1, height - 1)) && position.follows(new Vector2d(0, 0)) && !isOccupied(position);
     }
 
     @Override
@@ -55,4 +61,5 @@ public class RectangularMap implements WorldMap {
         MapVisualizer visualizer = new MapVisualizer(this);
         return visualizer.draw(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
     }
+
 }

@@ -35,28 +35,33 @@ public class Animal {
         this.directions = directions;
     }
 
-    public void move(MoveDirection direction, MoveValidator moveValidator) {
+    public boolean move(MoveDirection direction, MoveValidator moveValidator) {
         switch (direction) {
             case RIGHT:
                 orientation = orientation.next();
-                break;
+                return true;
             case LEFT:
                 orientation = orientation.previous();
-                break;
+                return true;
             case FORWARD:
                 Vector2d forwardPosition = position.add(orientation.toUnitVector());
                 if (moveValidator.canMoveTo(forwardPosition)) {
                     position = forwardPosition;
+                    return true;
                 }
-                break;
+                return false;
             case BACKWARD:
                 Vector2d backwardPosition = position.subtract(orientation.toUnitVector());
                 if (moveValidator.canMoveTo(backwardPosition)) {
                     position = backwardPosition;
+                    return true;
                 }
-                break;
+                return false;
+            default:
+                return false;
         }
     }
+
 
     @Override
     public String toString() {
@@ -66,4 +71,5 @@ public class Animal {
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
+
 }
