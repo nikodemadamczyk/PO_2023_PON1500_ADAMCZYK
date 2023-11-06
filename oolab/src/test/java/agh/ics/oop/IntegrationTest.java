@@ -73,12 +73,11 @@ public class IntegrationTest{
         );
 
         List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 3));
-        WorldMap map = new RectangularMap(3, 3);
+        WorldMap map = new RectangularMap(4, 4);
         Simulation simulation = new Simulation(map, directions, positions);
         simulation.run();
-
-        assertEquals(new Vector2d(2, 2), map.objectAt(new Vector2d(2, 2)).getPosition());
-        assertEquals(MapDirection.NORTH, map.objectAt(new Vector2d(2, 2)).getOrientation());
+        assertEquals(new Vector2d(2, 3), map.objectAt(new Vector2d(2, 3)).getPosition());
+        assertEquals(MapDirection.NORTH, map.objectAt(new Vector2d(2, 3)).getOrientation());
 
         assertEquals(new Vector2d(3, 3), map.objectAt(new Vector2d(3, 3)).getPosition());
         assertEquals(MapDirection.EAST, map.objectAt(new Vector2d(3, 3)).getOrientation());
