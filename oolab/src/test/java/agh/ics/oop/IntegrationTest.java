@@ -1,66 +1,85 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.Simulation;
+import agh.ics.oop.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class IntegrationTest {
+public class IntegrationTest{
+
     @Test
-    public void testSimulationWithValidDirectionsAndPositions() {
-        String[] inputDirections = {"f", "b", "r", "l", "f", "f", "r", "r"};
-        List<MoveDirection> directions = OptionsParser.parse(inputDirections);
-        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
+    public void testSimulationSingleAnimal() {
+        List<MoveDirection> directions = List.of(
+                MoveDirection.FORWARD, MoveDirection.RIGHT,
+                MoveDirection.FORWARD, MoveDirection.FORWARD,
+                MoveDirection.LEFT, MoveDirection.FORWARD
+        );
 
-        Simulation simulation = new Simulation(directions, positions);
+        List<Vector2d> positions = List.of(new Vector2d(2, 2));
+        WorldMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(map, directions, positions);
         simulation.run();
 
-        assertTrue(simulation.getAnimals().get(0).isAt(new Vector2d(3, 3)));
-        assertEquals("Południe", simulation.getAnimals().get(0).getOrientation().toString());
-
-        assertTrue(simulation.getAnimals().get(1).isAt(new Vector2d(2, 3)));
-        assertEquals("Północ", simulation.getAnimals().get(1).getOrientation().toString());
+        assertEquals(new Vector2d(4, 4), map.objectAt(new Vector2d(4, 4)).getPosition());
+        assertEquals(MapDirection.NORTH, map.objectAt(new Vector2d(4, 4)).getOrientation());
     }
 
     @Test
-    public void testSimulationWithOutOfBoundsMovement() {
-        String[] inputDirections = {"f", "f", "f", "f", "f", "f", "f", "f", "f", "f"};
-        List<MoveDirection> directions = OptionsParser.parse(inputDirections);
-        List<Vector2d> positions = List.of(new Vector2d(2, 2));
+    public void testSimulationMultipleAnimals() {
+        List<MoveDirection> directions = List.of(
+                MoveDirection.FORWARD, MoveDirection.RIGHT,
+                MoveDirection.FORWARD, MoveDirection.FORWARD
+        );
 
-        Simulation simulation = new Simulation(directions, positions);
+        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 3));
+        WorldMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(map, directions, positions);
         simulation.run();
 
-        assertTrue(simulation.getAnimals().get(0).getPosition().precedes(new Vector2d(4, 4)));
-        assertTrue(simulation.getAnimals().get(0).getPosition().follows(new Vector2d(0, 0)));
+        assertEquals(new Vector2d(2, 4), map.objectAt(new Vector2d(2, 4)).getPosition());
+        assertEquals(MapDirection.NORTH, map.objectAt(new Vector2d(2, 4)).getOrientation());
+
+        assertEquals(new Vector2d(4, 3), map.objectAt(new Vector2d(4, 3)).getPosition());
+        assertEquals(MapDirection.EAST, map.objectAt(new Vector2d(4, 3)).getOrientation());
     }
 
     @Test
-    public void testSimulationWithInvalidDirection() {
-        String[] inputDirections = {"f", "x", "b", "l", "r", "r"};
-        List<MoveDirection> directions = OptionsParser.parse(inputDirections);
-        List<Vector2d> positions = List.of(new Vector2d(2, 2));
+    public void testSimulationWithCollision() {
 
-        Simulation simulation = new Simulation(directions, positions);
+        List<MoveDirection> directions = List.of(
+                MoveDirection.FORWARD, MoveDirection.RIGHT, MoveDirection.LEFT,
+                MoveDirection.RIGHT, MoveDirection.BACKWARD
+        );
+        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 3));
+        WorldMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(map, directions, positions);
         simulation.run();
 
-        assertTrue(simulation.getAnimals().get(0).isAt(new Vector2d(2, 2)));
-        assertEquals("Wschód", simulation.getAnimals().get(0).getOrientation().toString());
+        assertEquals(new Vector2d(2, 3), map.objectAt(new Vector2d(2, 3)).getPosition());
+        assertEquals(MapDirection.WEST, map.objectAt(new Vector2d(2, 3)).getOrientation());
+
+        assertEquals(new Vector2d(3, 3), map.objectAt(new Vector2d(3, 3)).getPosition());
+        assertEquals(MapDirection.SOUTH, map.objectAt(new Vector2d(3, 3)).getOrientation());
     }
 
     @Test
-    public void testSimulationWithEmptyDirections() {
-        String[] inputDirections = {};
-        List<MoveDirection> directions = OptionsParser.parse(inputDirections);
-        List<Vector2d> positions = List.of(new Vector2d(2, 2));
+    public void testSimulationBlockedMovement() {
+        List<MoveDirection> directions = List.of(
+                MoveDirection.FORWARD, MoveDirection.RIGHT,
+                MoveDirection.FORWARD, MoveDirection.FORWARD
+        );
 
-        Simulation simulation = new Simulation(directions, positions);
+        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 3));
+        WorldMap map = new RectangularMap(4, 4);
+        Simulation simulation = new Simulation(map, directions, positions);
         simulation.run();
+        assertEquals(new Vector2d(2, 3), map.objectAt(new Vector2d(2, 3)).getPosition());
+        assertEquals(MapDirection.NORTH, map.objectAt(new Vector2d(2, 3)).getOrientation());
 
-        assertTrue(simulation.getAnimals().get(0).isAt(new Vector2d(2, 2)));
+        assertEquals(new Vector2d(3, 3), map.objectAt(new Vector2d(3, 3)).getPosition());
+        assertEquals(MapDirection.EAST, map.objectAt(new Vector2d(3, 3)).getOrientation());
     }
 }

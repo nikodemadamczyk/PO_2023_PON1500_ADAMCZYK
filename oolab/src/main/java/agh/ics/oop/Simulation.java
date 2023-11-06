@@ -3,14 +3,18 @@ package agh.ics.oop;
 import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.WorldMap;
+import agh.ics.oop.model.RectangularMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Simulation {
+    private final WorldMap map;
     private final List<Animal> animals;
 
-    public Simulation(List<MoveDirection> directions, List<Vector2d> positions) {
+    public Simulation(WorldMap map, List<MoveDirection> directions, List<Vector2d> positions) {
+        this.map = map;
         animals = initializeAnimals(directions, positions);
     }
 
@@ -25,25 +29,27 @@ public class Simulation {
                 animalDirections.add(directions.get(j));
             }
             animal.setDirections(animalDirections);
-            animals.add(animal);
+            if (map.place(animal)) {
+                animals.add(animal);
+            }
         }
 
         return animals;
     }
 
     public void run() {
+//        System.out.println(map);
         int maxMoves = getMaxMoves() + 1;
         for (int i = 0; i < maxMoves; i++) {
-            for (int j = 0; j < animals.size(); j++) {
-                Animal animal = animals.get(j);
-                System.out.println("Zwierzę: " + j + " " + animal);
+            for (Animal animal : map.getAnimals()) {
                 List<MoveDirection> directions = animal.getDirections();
                 if (!directions.isEmpty()) {
                     MoveDirection nextMove = directions.remove(0);
-                    animal.move(nextMove);
+                    map.move(animal, nextMove);
                 }
             }
         }
+        System.out.println(map);
     }
 
     private int getMaxMoves() {
@@ -53,7 +59,5 @@ public class Simulation {
         }
         return maxMoves;
     }
-    public List<Animal> getAnimals() {
-        return animals;
-    }
+
 }
