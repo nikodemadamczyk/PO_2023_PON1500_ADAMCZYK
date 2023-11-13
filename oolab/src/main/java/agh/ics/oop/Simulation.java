@@ -11,37 +11,33 @@ import java.util.List;
 
 public class Simulation {
     private final WorldMap map;
-    private final List<Animal> animals;
 
     public Simulation(WorldMap map, List<MoveDirection> directions, List<Vector2d> positions) {
         this.map = map;
-        animals = initializeAnimals(directions, positions);
+        initializeAnimals(directions, positions);
     }
 
-    private List<Animal> initializeAnimals(List<MoveDirection> directions, List<Vector2d> positions) {
-        List<Animal> animals = new ArrayList<>();
+    private void initializeAnimals(List<MoveDirection> directions, List<Vector2d> positions) {
         int numAnimals = positions.size();
 
         for (int i = 0; i < numAnimals; i++) {
-            Animal animal = new Animal(positions.get(i));
+            Vector2d initialPosition = positions.get(i);
+            Animal animal = new Animal(initialPosition);
             List<MoveDirection> animalDirections = new ArrayList<>();
             for (int j = i; j < directions.size(); j += numAnimals) {
                 animalDirections.add(directions.get(j));
             }
             animal.setDirections(animalDirections);
-            if (map.place(animal)) {
-                animals.add(animal);
-            }
+            map.place(animal);
         }
-
-        return animals;
     }
 
+
+
     public void run() {
-//        System.out.println(map);
         int maxMoves = getMaxMoves() + 1;
         for (int i = 0; i < maxMoves; i++) {
-            for (Animal animal : map.getAnimals()) {
+            for (Animal animal : map.getElements()) {
                 List<MoveDirection> directions = animal.getDirections();
                 if (!directions.isEmpty()) {
                     MoveDirection nextMove = directions.remove(0);
@@ -54,10 +50,9 @@ public class Simulation {
 
     private int getMaxMoves() {
         int maxMoves = 0;
-        for (Animal animal : animals) {
+        for (Animal animal : map.getElements()) {
             maxMoves = Math.max(maxMoves, animal.getDirections().size());
         }
         return maxMoves;
     }
-
 }

@@ -16,7 +16,7 @@ public class RectangularMap implements WorldMap {
     }
 
     @Override
-    public List<Animal> getAnimals() {
+    public List<Animal> getElements() {
         return new ArrayList<>(animals.values());
     }
 

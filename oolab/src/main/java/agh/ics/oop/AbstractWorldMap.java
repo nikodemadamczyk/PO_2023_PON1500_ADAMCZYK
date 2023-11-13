@@ -1,4 +1,6 @@
-package agh.ics.oop.model;
+package agh.ics.oop;
+
+import agh.ics.oop.model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,15 +17,22 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public List<Animal> getAnimals() {
+    public List<Animal> getElements() {
         return new ArrayList<>(animals.values());
     }
 
     @Override
     public boolean place(Animal animal) {
-        if (canMoveTo(animal.getPosition())) {
-            animals.put(animal.getPosition(), animal);
-            elements.put(animal.getPosition(), animal);
+        Vector2d animalPosition = animal.getPosition();
+        if (canMoveTo(animalPosition)) {
+            // Check if there is grass at the animal's position
+            if (elements.containsKey(animalPosition) && elements.get(animalPosition) instanceof Grass) {
+                // If there is grass at the animal's position, remove the grass
+                elements.remove(animalPosition);
+            }
+
+            animals.put(animalPosition, animal);
+            elements.put(animalPosition, animal);
             return true;
         }
         return false;
@@ -33,13 +42,21 @@ public abstract class AbstractWorldMap implements WorldMap {
     public void move(Animal animal, MoveDirection direction) {
         Vector2d previousPosition = animal.getPosition();
         if (animal.move(direction, this)) {
-            animals.remove(previousPosition, animal);
             Vector2d newPosition = animal.getPosition();
-            animals.put(newPosition, animal);
+            animals.remove(previousPosition);
             elements.remove(previousPosition);
+
+            // Check if there is grass at the new position
+            if (elements.containsKey(newPosition) && elements.get(newPosition) instanceof Grass) {
+                // If there is grass at the new position, remove the grass
+                elements.remove(newPosition);
+            }
+
+            animals.put(newPosition, animal);
             elements.put(newPosition, animal);
         }
     }
+
 
     @Override
     public boolean isOccupied(Vector2d position) {
@@ -65,7 +82,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected int getHeight() {
         return (int) Math.sqrt(elements.size() * 10);
     }
-
     @Override
     public String toString() {
         MapVisualizer visualizer = new MapVisualizer(this);

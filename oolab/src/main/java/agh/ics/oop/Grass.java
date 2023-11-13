@@ -1,2 +1,21 @@
-package agh.ics.oop;public class Grass {
+package agh.ics.oop;
+
+import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.WorldElement;
+
+public class Grass implements WorldElement {
+    private final Vector2d position;
+
+    public Grass(Vector2d position) {
+        this.position = position;
+    }
+
+    public Vector2d getPosition() {
+        return position;
+    }
+
+    @Override
+    public String toString() {
+        return "*";
+    }
 }
