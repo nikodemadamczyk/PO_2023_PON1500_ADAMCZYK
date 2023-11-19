@@ -3,6 +3,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface WorldMap extends MoveValidator {
 
-    List<Animal> getAnimals();
+//    List<Animal> getElements();
 
     /**
      * Place a animal on the map.
@@ -40,10 +41,12 @@ public interface WorldMap extends MoveValidator {
     boolean isOccupied(Vector2d position);
 
     /**
-     * Return an animal at a given position.
+     * Return an object at a given position.
      *
-     * @param position The position of the animal.
-     * @return animal or null if the position is not occupied.
+     * @param position The position of the object.
+     * @return WorldElement or null if the position is not occupied.
      */
-    Animal objectAt(Vector2d position);
+    WorldElement objectAt(Vector2d position);
+    Collection<WorldElement> getElements();
+
 }

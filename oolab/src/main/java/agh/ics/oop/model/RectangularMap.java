@@ -1,65 +1,33 @@
 package agh.ics.oop.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class RectangularMap implements WorldMap {
-    private final int width;
-    private final int height;
-    private final Map<Vector2d, Animal> animals = new HashMap<>();
+public class RectangularMap extends AbstractWorldMap {
+    private int width;
+    private int height;
+    private Vector2d lowerLeft;
+    private Vector2d upperRight;
 
     public RectangularMap(int width, int height) {
         this.width = width;
         this.height = height;
+        this.lowerLeft = new Vector2d(0, 0);
+        this.upperRight = new Vector2d(this.width, this.height);
     }
 
     @Override
-    public List<Animal> getAnimals() {
-        return new ArrayList<>(animals.values());
+    protected Vector2d getLowerLeft() {
+        return lowerLeft;
     }
 
     @Override
-    public boolean place(Animal animal) {
-        if (canMoveTo(animal.getPosition())) {
-            animals.put(animal.getPosition(), animal);
-            return true;
-        }
-        return false;
-    }
-
-
-    @Override
-    public void move(Animal animal, MoveDirection direction) {
-        Vector2d previousPosition = animal.getPosition();
-        if (animal.move(direction, this)) {
-            animals.remove(previousPosition, animal);
-            Vector2d newPosition = animal.getPosition();
-            animals.put(newPosition, animal);
-        }
-    }
-
-
-    @Override
-    public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position);
-    }
-
-    @Override
-    public Animal objectAt(Vector2d position) {
-        return animals.get(position);
+    protected Vector2d getUpperRight() {
+        return upperRight;
     }
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return position.precedes(new Vector2d(width - 1, height - 1)) && position.follows(new Vector2d(0, 0)) && !isOccupied(position);
+        if (position.follows(lowerLeft) && position.precedes(upperRight)) {
+            return !isOccupied(position);
+        }
+        return false;
     }
-
-    @Override
-    public String toString() {
-        MapVisualizer visualizer = new MapVisualizer(this);
-        return visualizer.draw(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
-    }
-
 }
