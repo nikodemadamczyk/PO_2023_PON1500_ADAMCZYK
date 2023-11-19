@@ -15,6 +15,15 @@ public class GrassField extends AbstractWorldMap {
         placeGrass();
     }
 
+
+    @Override
+    public Boundary getCurrentBounds() {
+        Vector2d lowerLeft = getLowerLeft();
+        Vector2d upperRight = getUpperRight();
+        return new Boundary(lowerLeft, upperRight);
+    }
+
+
     private void placeGrass() {
         Random random = new Random();
         for (int i = 0; i < grassCount; i++) {
@@ -79,8 +88,12 @@ public class GrassField extends AbstractWorldMap {
     }
 
     @Override
-    public boolean canMoveTo(Vector2d position) {
+    public boolean canMoveTo(Vector2d position) throws PositionAlreadyOccupiedException {
         WorldElement object = objectAt(position);
-        return object == null || object instanceof Grass;
+        if (object == null || object instanceof Grass) {
+            return true;
+        } else {
+            throw new PositionAlreadyOccupiedException(position);
+        }
     }
 }

@@ -16,12 +16,12 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public boolean place(Animal animal) {
+    public boolean place(Animal animal) throws PositionAlreadyOccupiedException {
         if (canMoveTo(animal.getPosition())) {
             animals.put(animal.getPosition(), animal);
             return true;
         }
-        return false;
+        throw new PositionAlreadyOccupiedException(animal.getPosition());
     }
 
     @Override
@@ -41,15 +41,21 @@ public abstract class AbstractWorldMap implements WorldMap {
         return animals.get(position);
     }
 
-    public String toString() {
-        MapVisualizer mapVisualizer = new MapVisualizer(this);
-        Vector2d lowerLeft = getLowerLeft();
-        Vector2d upperRight = getUpperRight();
-        return mapVisualizer.draw(lowerLeft, upperRight);
-    }
+//    public String toString() {
+//        Boundary boundary = this.getCurrentBounds();
+//        return mapVisualizer.draw(boundary.lowerLeft(), boundary.upperRight());
+//    }
 
     @Override
     public List<WorldElement> getElements() {
         return new ArrayList<>(animals.values());
+    }
+
+    public abstract Boundary getCurrentBounds();
+
+    @Override
+    public String toString() {
+        Boundary boundary = this.getCurrentBounds();
+        return mapVisualizer.draw(boundary.lowerLeft(), boundary.upperRight());
     }
 }
