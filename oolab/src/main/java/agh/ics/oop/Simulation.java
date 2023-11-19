@@ -47,24 +47,4 @@ public class Simulation {
             System.out.println(map.toString());
         }
     }
-
-    public void run(List<MapDirection> actualDirections,
-                    List<Vector2d> actualPositions) {
-        int n = getAnimals().size();
-        for (Animal animal : animals) {
-            if (!map.place(animal)) {
-                animals.remove(animal);
-            }
-        }
-
-        System.out.println(map.toString());
-        for (int i = 0; i < moves.size(); i++) {
-            int animalsInd = i % n;
-            Animal currentAnimal = animals.get(animalsInd);
-            map.move(currentAnimal, moves.get(i));
-            actualDirections.add(currentAnimal.getMapDirection());
-            actualPositions.add(currentAnimal.getPosition());
-            System.out.println(map.toString());
-        }
-    }
 }

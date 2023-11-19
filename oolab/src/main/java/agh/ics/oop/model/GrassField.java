@@ -2,56 +2,47 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.Grass;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 public class GrassField extends AbstractWorldMap {
     private final int grassCount;
-    private final List<Grass> grassList;
+    private final Map<Vector2d, Grass> grassMap;
 
     public GrassField(int grassCount) {
         super();
         this.grassCount = grassCount;
-        this.grassList = new ArrayList<>();
+        this.grassMap = new HashMap<>();
         placeGrass();
     }
 
     private void placeGrass() {
+        Random random = new Random();
         for (int i = 0; i < grassCount; i++) {
             Vector2d grassPos;
-
             do {
-                grassPos =
-                        new Vector2d((int) (Math.random() * Math.sqrt(grassCount * 10))
-                                , (int) (Math.random() * Math.sqrt(grassCount * 10)));
-            }   while (isOccupied(grassPos));
+                int x = random.nextInt((int) Math.sqrt(grassCount * 10));
+                int y = random.nextInt((int) Math.sqrt(grassCount * 10));
+                grassPos = new Vector2d(x, y);
+            } while (isOccupied(grassPos));
             Grass grass = new Grass(grassPos);
-            grassList.add(grass);
+            grassMap.put(grassPos, grass);
         }
     }
 
+    @Override
     public WorldElement objectAt(Vector2d position) {
-        for (WorldElement animal : animals.values()) {
-            if (animal.getPosition().equals(position)) {
-                return animal;
-            }
+        if (animals.containsKey(position)) {
+            return animals.get(position);
         }
-
-        for (Grass grass : grassList) {
-            if (grass.getPosition().equals(position)) {
-                return grass;
-            }
-        }
-
-        return null;
+        return grassMap.get(position);
     }
 
     @Override
     public List<WorldElement> getElements() {
-        return new ArrayList<>(grassList);
+        return new ArrayList<>(grassMap.values());
     }
 
+    @Override
     protected Vector2d getLowerLeft() {
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
@@ -61,32 +52,35 @@ public class GrassField extends AbstractWorldMap {
             minY = Math.min(minY, animal.getPosition().getY());
         }
 
-        for (Grass grass : grassList) {
-            minX = Math.min(minX, grass.getPosition().getX());
-            minY = Math.min(minY, grass.getPosition().getY());
+        for (Vector2d position : grassMap.keySet()) {
+            minX = Math.min(minX, position.getX());
+            minY = Math.min(minY, position.getY());
         }
 
         return new Vector2d(minX, minY);
     }
 
+    @Override
     protected Vector2d getUpperRight() {
         int maxX = Integer.MIN_VALUE;
         int maxY = Integer.MIN_VALUE;
+
         for (Animal animal : animals.values()) {
             maxX = Math.max(maxX, animal.getPosition().getX());
             maxY = Math.max(maxY, animal.getPosition().getY());
         }
-        for (Grass grass : grassList) {
-            maxX = Math.max(maxX, grass.getPosition().getX());
-            maxY = Math.max(maxY, grass.getPosition().getY());
+
+        for (Vector2d position : grassMap.keySet()) {
+            maxX = Math.max(maxX, position.getX());
+            maxY = Math.max(maxY, position.getY());
         }
+
         return new Vector2d(maxX, maxY);
     }
 
+    @Override
     public boolean canMoveTo(Vector2d position) {
-        if (!isOccupied(position)) {
-            return true;
-        }
-        else return objectAt(position).getClass() != Animal.class;
+        WorldElement object = objectAt(position);
+        return object == null || object instanceof Grass;
     }
 }
