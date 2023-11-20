@@ -10,15 +10,40 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected abstract Vector2d getUpperRight();
 
     protected Map<Vector2d, Animal> animals = new HashMap<>();
+    private final List<MapChangeListener> observers = new ArrayList<>();
+
+    protected MapVisualizer mapVisualizer;
 
     public AbstractWorldMap() {
-        this.animals = new HashMap<>();
+        this.mapVisualizer = new MapVisualizer(this);
     }
 
+    public void addObserver(MapChangeListener observer) {
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    public void removeObserver(MapChangeListener observer) {
+        observers.remove(observer);
+    }
+
+    protected void notifyObservers(String message) {
+        for (MapChangeListener observer : observers) {
+            observer.mapChanged(this, message);
+        }
+    }
+
+    protected void mapChanged(String message) {
+        for (MapChangeListener observer : observers) {
+            observer.mapChanged(this, message);
+        }
+    }
     @Override
     public boolean place(Animal animal) throws PositionAlreadyOccupiedException {
         if (canMoveTo(animal.getPosition())) {
             animals.put(animal.getPosition(), animal);
+            mapChanged("Animal placed at " + animal.getPosition());
             return true;
         }
         throw new PositionAlreadyOccupiedException(animal.getPosition());
@@ -26,9 +51,13 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public void move(Animal animal, MoveDirection direction) {
-        animals.remove(animal.getPosition());
-        animal.move(direction, this);
-        animals.put(animal.getPosition(), animal);
+        if(animals.containsKey(animal.getPosition())) {
+            Vector2d lastPosition = animal.getPosition();
+            animals.remove(lastPosition);
+            animal.move(direction,this);
+            animals.put(animal.getPosition(),animal);
+            mapChanged("Animal moved from " + lastPosition + " moved to " + animal.getPosition());
+        }
     }
 
     @Override
@@ -40,11 +69,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     public WorldElement objectAt(Vector2d position) {
         return animals.get(position);
     }
-
-//    public String toString() {
-//        Boundary boundary = this.getCurrentBounds();
-//        return mapVisualizer.draw(boundary.lowerLeft(), boundary.upperRight());
-//    }
 
     @Override
     public List<WorldElement> getElements() {

@@ -38,14 +38,13 @@ public class Simulation {
             Animal animal = animals.get(i);
             try {
                 if (!map.place(animal)) {
-                    animals.remove(i--); // Zmniejszamy i, ponieważ usunęliśmy element
+                    animals.remove(i--);
                 }
             } catch (PositionAlreadyOccupiedException e) {
                 System.out.println(e.getMessage());
-                animals.remove(i--); // Zmniejszamy i, ponieważ usunęliśmy element
+                animals.remove(i--);
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
-                // Można zdecydować o zakończeniu symulacji lub kontynuacji
             }
         }
 
@@ -58,7 +57,7 @@ public class Simulation {
                 System.out.println(e.getMessage());
                 // Można zdecydować o zakończeniu symulacji lub kontynuacji
             }
-            System.out.println(map.toString());
+//            System.out.println(map.toString());
         }
     }
 
