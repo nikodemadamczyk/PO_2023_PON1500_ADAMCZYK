@@ -34,17 +34,32 @@ public class Simulation {
 
     public void run() {
         int n = getAnimals().size();
-        for (Animal animal : animals) {
-            if (!map.place(animal)) {
-                animals.remove(animal);
+        for (int i = 0; i < animals.size(); i++) {
+            Animal animal = animals.get(i);
+            try {
+                if (!map.place(animal)) {
+                    animals.remove(i--);
+                }
+            } catch (PositionAlreadyOccupiedException e) {
+                System.out.println(e.getMessage());
+                animals.remove(i--);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
         }
 
         System.out.println(map.toString());
         for (int i = 0; i < moves.size(); i++) {
             int animalsInd = i % n;
-            map.move(animals.get(animalsInd), moves.get(i));
-            System.out.println(map.toString());
+            try {
+                map.move(animals.get(animalsInd), moves.get(i));
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                // Można zdecydować o zakończeniu symulacji lub kontynuacji
+            }
+//            System.out.println(map.toString());
         }
     }
+
+
 }

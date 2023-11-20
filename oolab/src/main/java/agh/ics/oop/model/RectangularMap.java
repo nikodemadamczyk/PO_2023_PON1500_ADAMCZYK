@@ -7,10 +7,16 @@ public class RectangularMap extends AbstractWorldMap {
     private Vector2d upperRight;
 
     public RectangularMap(int width, int height) {
+        super();
         this.width = width;
         this.height = height;
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(this.width, this.height);
+    }
+
+    @Override
+    public Boundary getCurrentBounds() {
+        return new Boundary(lowerLeft, upperRight);
     }
 
     @Override
@@ -24,10 +30,17 @@ public class RectangularMap extends AbstractWorldMap {
     }
 
     @Override
-    public boolean canMoveTo(Vector2d position) {
+    public boolean canMoveTo(Vector2d position) throws PositionAlreadyOccupiedException {
         if (position.follows(lowerLeft) && position.precedes(upperRight)) {
-            return !isOccupied(position);
+            if (!isOccupied(position)) {
+                return true;
+            } else {
+                throw new PositionAlreadyOccupiedException(position);
+            }
         }
         return false;
     }
+
+
+
 }

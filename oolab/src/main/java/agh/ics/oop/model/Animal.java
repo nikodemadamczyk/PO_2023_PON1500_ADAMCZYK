@@ -56,16 +56,24 @@ public class Animal implements WorldElement{
     private void moveForward(MoveValidator moveValidator) {
         MapDirection currentDirection = getMapDirection();
         Vector2d newPosition = getPosition().add(currentDirection.toUnitVector());
-        if (moveValidator.canMoveTo(newPosition)) {
-            setPosition(newPosition);
+        try {
+            if (moveValidator.canMoveTo(newPosition)) {
+                setPosition(newPosition);
+            }
+        } catch (PositionAlreadyOccupiedException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     private void moveBackward(MoveValidator moveValidator) {
         MapDirection currentDirection = getMapDirection();
         Vector2d newPosition = getPosition().add(currentDirection.toUnitVector().opposite());
-        if (moveValidator.canMoveTo(newPosition)) {
-            setPosition(newPosition);
+        try {
+            if (moveValidator.canMoveTo(newPosition)) {
+                setPosition(newPosition);
+            }
+        } catch (PositionAlreadyOccupiedException e) {
+            System.out.println(e.getMessage());
         }
     }
 
