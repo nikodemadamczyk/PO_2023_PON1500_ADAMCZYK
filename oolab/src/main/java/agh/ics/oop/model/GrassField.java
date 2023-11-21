@@ -5,6 +5,7 @@ import agh.ics.oop.Grass;
 import java.util.*;
 
 public class GrassField extends AbstractWorldMap {
+    private final UUID id = UUID.randomUUID();
     private final int grassCount;
     private final Map<Vector2d, Grass> grassMap;
 
@@ -24,7 +25,7 @@ public class GrassField extends AbstractWorldMap {
     }
 
 
-    private void placeGrass() {
+    private synchronized void placeGrass() {
         Random random = new Random();
         for (int i = 0; i < grassCount; i++) {
             Vector2d grassPos;
@@ -37,6 +38,7 @@ public class GrassField extends AbstractWorldMap {
             grassMap.put(grassPos, grass);
         }
     }
+
 
     @Override
     public WorldElement objectAt(Vector2d position) {
@@ -88,12 +90,18 @@ public class GrassField extends AbstractWorldMap {
     }
 
     @Override
-    public boolean canMoveTo(Vector2d position) throws PositionAlreadyOccupiedException {
+    public synchronized boolean canMoveTo(Vector2d position) throws PositionAlreadyOccupiedException {
         WorldElement object = objectAt(position);
         if (object == null || object instanceof Grass) {
             return true;
         } else {
             throw new PositionAlreadyOccupiedException(position);
         }
+    }
+
+
+    @Override
+    public UUID getId() {
+        return id;
     }
 }
