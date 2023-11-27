@@ -55,7 +55,6 @@ public class Simulation {
                 map.move(animals.get(animalsInd), moves.get(i));
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
-                // Można zdecydować o zakończeniu symulacji lub kontynuacji
             }
 //            System.out.println(map.toString());
         }

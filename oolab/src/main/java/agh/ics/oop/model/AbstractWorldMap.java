@@ -18,6 +18,11 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.mapVisualizer = new MapVisualizer(this);
     }
 
+    private int updateCounter = 0;
+
+    public int getUpdateCounter() {
+        return updateCounter;
+    }
     public void addObserver(MapChangeListener observer) {
         if (!observers.contains(observer)) {
             observers.add(observer);
@@ -35,6 +40,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     protected void mapChanged(String message) {
+        updateCounter++;
         for (MapChangeListener observer : observers) {
             observer.mapChanged(this, message);
         }
