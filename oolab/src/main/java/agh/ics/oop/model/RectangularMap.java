@@ -1,6 +1,9 @@
 package agh.ics.oop.model;
 
+import java.util.UUID;
+
 public class RectangularMap extends AbstractWorldMap {
+    private final UUID id = UUID.randomUUID();
     private int width;
     private int height;
     private Vector2d lowerLeft;
@@ -30,7 +33,7 @@ public class RectangularMap extends AbstractWorldMap {
     }
 
     @Override
-    public boolean canMoveTo(Vector2d position) throws PositionAlreadyOccupiedException {
+    public synchronized boolean canMoveTo(Vector2d position) throws PositionAlreadyOccupiedException {
         if (position.follows(lowerLeft) && position.precedes(upperRight)) {
             if (!isOccupied(position)) {
                 return true;
@@ -42,5 +45,8 @@ public class RectangularMap extends AbstractWorldMap {
     }
 
 
-
+    @Override
+    public UUID getId() {
+        return id;
+    }
 }
