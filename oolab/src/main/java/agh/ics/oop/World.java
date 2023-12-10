@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
+import javafx.application.Application;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ public class World {
             map.addObserver(display);
             Simulation simulation = new Simulation(positions, directions, map);
             simulation.run();
+            Application.launch(SimulationApp.class, args);
+
             System.out.println("Simulation " + i + " - Update Counter: " + map.getUpdateCounter());
         }
 
