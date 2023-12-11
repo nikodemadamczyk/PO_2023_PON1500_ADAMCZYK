@@ -1,32 +1,78 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.model.WorldMap;
+import agh.ics.oop.OptionsParser;
+import agh.ics.oop.model.*;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 
-public class SimulationPresenter {
+import java.util.Arrays;
+import java.util.List;
+
+public class SimulationPresenter implements MapChangeListener {
+    @FXML
+    public TextField textField;
+    @FXML
+    public Label moveInfoLabel;
+    @FXML
+    public Button startButton;
+    @FXML
+    public GridPane mapGrid;
+
     private WorldMap worldMap;
 
-    @FXML
-    private Label infoLabel;
-
-    public void setWorldMap(WorldMap worldMap) {
-        this.worldMap = worldMap;
-        drawMap();
+    @Override
+    public void mapChanged() {
+        Platform.runLater(() -> {
+            // Tutaj logika do rysowania mapy na GridPane
+             GridMapDrawer gridMapDrawer = new GridMapDrawer(mapGrid, worldMap);
+             gridMapDrawer.draw();
+             moveInfoLabel.setText("Mapa została zaktualizowana.");
+        });
     }
 
-    public void drawMap() {
-        // Tutaj implementacja tłumaczenia mapy na postać siatki kontrolek
-        // Na razie ustawiamy zawartość mapy jako tekst
-        if (worldMap != null) {
-            infoLabel.setText(worldMap.toString());
-        } else {
-            infoLabel.setText("Mapa nie została jeszcze zainicjowana.");
+    public void onSimulationStartClicked(ActionEvent actionEvent) {
+        try {
+            startSimulation();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    // Metoda wywoływana, gdy mapa się zmienia
-    public void mapChanged() {
-        drawMap();
+    private void startSimulation() {
+        // Przykładowa inicjalizacja mapy i symulacji
+        this.worldMap = new GrassField(10);
+        this.worldMap.addListener(this);
+
+        String[] options = textField.getText().split(" ");
+
+        List<Vector2d> initialPositions = List.of(new Vector2d(-3, 5), new Vector2d(3, 4));
+        // Tutaj logika inicjalizacji symulacji
+        // Przykład: Simulation simulation = new Simulation(tryToParseOptions(options), initialPositions, worldMap);
+
+        // Tutaj logika uruchamiania silnika symulacji
+        // Przykład: SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
+        // simulationEngine.runAsync();
+    }
+
+    private static List<MoveDirection> tryToParseOptions(String[] options) {
+        try {
+            return OptionsParser.parse(Arrays.stream(options).toList());
+        } catch (IllegalArgumentException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Invalid moves");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            throw e;
+        }
+    }
+
+    public void setWorldMap(WorldMap worldMap) {
+        this.worldMap = worldMap;
     }
 }
