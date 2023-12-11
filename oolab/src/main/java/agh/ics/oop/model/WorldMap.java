@@ -51,5 +51,8 @@ public interface WorldMap extends MoveValidator {
     Collection<WorldElement> getElements();
     UUID getId();
 
+    int getWidth();
+    int getHeight();
+    void addListener(MapChangeListener listener);
     Boundary getCurrentBounds();
 }

@@ -30,7 +30,7 @@ public class SimulationPresenter implements MapChangeListener {
     private WorldMap worldMap;
 
     @Override
-    public void mapChanged() {
+    public void mapChanged(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
             // Tutaj logika do rysowania mapy na GridPane
              GridMapDrawer gridMapDrawer = new GridMapDrawer(mapGrid, worldMap);
@@ -54,7 +54,7 @@ public class SimulationPresenter implements MapChangeListener {
         String[] options = textField.getText().split(" ");
 
         List<Vector2d> initialPositions = List.of(new Vector2d(-3, 5), new Vector2d(3, 4));
-        Simulation simulation = new Simulation(tryToParseOptions(options), initialPositions, worldMap);
+        Simulation simulation = new Simulation(initialPositions, OptionsParser.parse(options), worldMap);
 
         SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
         // simulationEngine.runAsync();
