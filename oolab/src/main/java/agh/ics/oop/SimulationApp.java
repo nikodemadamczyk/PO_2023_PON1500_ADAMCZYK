@@ -16,7 +16,11 @@ public class SimulationApp extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
+        SimulationPresenter presenter = loader.getController();
 
+        GrassField grassField = new GrassField(7);
+        grassField.addListener(presenter);
+        presenter.setWorldMap(grassField);
         configureStage(primaryStage, viewRoot);
         primaryStage.show();
     }

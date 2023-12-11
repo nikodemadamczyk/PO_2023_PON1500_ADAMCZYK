@@ -1,9 +1,6 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.GridMapDrawer;
-import agh.ics.oop.OptionsParser;
-import agh.ics.oop.Simulation;
-import agh.ics.oop.SimulationEngine;
+import agh.ics.oop.*;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -32,10 +29,9 @@ public class SimulationPresenter implements MapChangeListener {
     @Override
     public void mapChanged(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
-            // Tutaj logika do rysowania mapy na GridPane
-             GridMapDrawer gridMapDrawer = new GridMapDrawer(mapGrid, worldMap);
-             gridMapDrawer.draw();
-             moveInfoLabel.setText("Mapa została zaktualizowana.");
+            GridMapDrawer gridMapDrawer = new GridMapDrawer(mapGrid, worldMap);
+            gridMapDrawer.draw();
+            moveInfoLabel.setText(message);
         });
     }
 
@@ -48,21 +44,17 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void startSimulation() {
-        this.worldMap = new GrassField(10);
-        this.worldMap.addListener(this);
-
         String[] options = textField.getText().split(" ");
-
         List<Vector2d> initialPositions = List.of(new Vector2d(-3, 5), new Vector2d(3, 4));
         Simulation simulation = new Simulation(initialPositions, OptionsParser.parse(options), worldMap);
-
         SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
-        // simulationEngine.runAsync();
+        simulationEngine.runAsync();
+        Platform.runLater(() -> startButton.setDisable(true));
     }
 
     private static List<MoveDirection> tryToParseOptions(String[] options) {
         try {
-            return OptionsParser.parse(Arrays.stream(options).toList());
+            return OptionsParser.parse(options);
         } catch (IllegalArgumentException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid moves");
@@ -71,6 +63,8 @@ public class SimulationPresenter implements MapChangeListener {
             throw e;
         }
     }
+
+
 
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
