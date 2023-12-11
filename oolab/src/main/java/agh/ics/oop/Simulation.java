@@ -58,6 +58,11 @@ public class Simulation {
             }
 //            System.out.println(map.toString());
         }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

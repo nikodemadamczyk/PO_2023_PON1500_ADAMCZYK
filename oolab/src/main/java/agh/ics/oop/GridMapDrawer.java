@@ -32,7 +32,7 @@ public class GridMapDrawer {
     }
 
     private void clearGrid() {
-        mapGrid.getChildren().clear();
+        mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
     }

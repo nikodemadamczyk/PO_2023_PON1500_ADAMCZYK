@@ -10,7 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +28,9 @@ public class SimulationPresenter implements MapChangeListener {
 
     private WorldMap worldMap;
 
+    public void setWorldMap(WorldMap worldMap) {
+        this.worldMap = worldMap;
+    }
     @Override
     public void mapChanged(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
@@ -44,6 +49,14 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void startSimulation() {
+
+        GrassField map = new GrassField(10);
+        map.addObserver(this);
+        map.addObserver((worldMap, message) -> {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    System.out.println(LocalDateTime.now().format(formatter) + " " + message);
+                }
+        );
         String[] options = textField.getText().split(" ");
         List<Vector2d> initialPositions = List.of(new Vector2d(-3, 5), new Vector2d(3, 4));
         Simulation simulation = new Simulation(initialPositions, OptionsParser.parse(options), worldMap);
@@ -56,17 +69,14 @@ public class SimulationPresenter implements MapChangeListener {
         try {
             return OptionsParser.parse(options);
         } catch (IllegalArgumentException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid moves");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+                Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid moves");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
+            });
             throw e;
         }
     }
 
-
-
-    public void setWorldMap(WorldMap worldMap) {
-        this.worldMap = worldMap;
-    }
 }
