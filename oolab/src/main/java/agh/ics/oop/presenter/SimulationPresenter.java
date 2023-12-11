@@ -1,6 +1,9 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.GridMapDrawer;
 import agh.ics.oop.OptionsParser;
+import agh.ics.oop.Simulation;
+import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -45,18 +48,15 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void startSimulation() {
-        // Przykładowa inicjalizacja mapy i symulacji
         this.worldMap = new GrassField(10);
         this.worldMap.addListener(this);
 
         String[] options = textField.getText().split(" ");
 
         List<Vector2d> initialPositions = List.of(new Vector2d(-3, 5), new Vector2d(3, 4));
-        // Tutaj logika inicjalizacji symulacji
-        // Przykład: Simulation simulation = new Simulation(tryToParseOptions(options), initialPositions, worldMap);
+        Simulation simulation = new Simulation(tryToParseOptions(options), initialPositions, worldMap);
 
-        // Tutaj logika uruchamiania silnika symulacji
-        // Przykład: SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
+        SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
         // simulationEngine.runAsync();
     }
 
