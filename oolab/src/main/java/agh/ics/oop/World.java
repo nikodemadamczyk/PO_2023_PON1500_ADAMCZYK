@@ -28,9 +28,9 @@ public class World {
 
         SimulationEngine engine = new SimulationEngine(simulations);
 
-         engine.runSync();
+//         engine.runSync();
 
-//        engine.runAsync();
+        engine.runAsync();
 
 //        engine.runAsyncInThreadPool();
 
