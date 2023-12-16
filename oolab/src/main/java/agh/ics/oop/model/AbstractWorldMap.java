@@ -81,7 +81,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         return new ArrayList<>(animals.values());
     }
 
-//    public abstract Boundary getCurrentBounds();
+    public abstract Boundary getCurrentBounds();
 
     @Override
     public String toString() {

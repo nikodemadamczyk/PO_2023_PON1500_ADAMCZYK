@@ -9,16 +9,12 @@ public class GrassField extends AbstractWorldMap {
     private final int grassCount;
     private final Map<Vector2d, Grass> grassMap;
 
-    private List<MapChangeListener> listeners = new ArrayList<>();
-
     public GrassField(int grassCount) {
         super();
         this.grassCount = grassCount;
         this.grassMap = new HashMap<>();
         placeGrass();
     }
-
-
 
 
     @Override
