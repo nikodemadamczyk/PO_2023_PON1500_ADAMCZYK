@@ -1,5 +1,10 @@
 package agh.ics.oop.presenter;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import java.io.IOException;
 import agh.ics.oop.*;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
@@ -42,10 +47,33 @@ public class SimulationPresenter implements MapChangeListener {
 
     public void onSimulationStartClicked(ActionEvent actionEvent) {
         try {
-            startSimulation();
+            createNewSimulationWindow();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void createNewSimulationWindow() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("simulation.fxml"));
+        BorderPane newSimulationRoot = loader.load();
+        SimulationPresenter newPresenter = loader.getController();
+
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(newSimulationRoot));
+        newStage.setTitle("New Simulation");
+        newStage.show();
+
+        // Inicjalizacja nowej symulacji
+        GrassField newGrassField = new GrassField(10);
+        newGrassField.addObserver(newPresenter);
+        newPresenter.setWorldMap(newGrassField);
+
+        // Uruchomienie symulacji
+        String[] options = textField.getText().split(" ");
+        List<Vector2d> initialPositions = List.of(new Vector2d(-3, 5), new Vector2d(3, 4));
+        Simulation newSimulation = new Simulation(initialPositions, OptionsParser.parse(options), newGrassField);
+        SimulationEngine newSimulationEngine = new SimulationEngine(List.of(newSimulation));
+        newSimulationEngine.runAsync();
     }
 
     private void startSimulation() {

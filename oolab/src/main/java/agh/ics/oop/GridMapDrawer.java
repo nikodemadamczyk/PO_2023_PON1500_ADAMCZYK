@@ -73,4 +73,7 @@ public class GridMapDrawer {
         GridPane.setHalignment(label, HPos.CENTER);
         mapGrid.add(label, columnIndex, rowIndex);
     }
+
+    public static class Menu {
+    }
 }
