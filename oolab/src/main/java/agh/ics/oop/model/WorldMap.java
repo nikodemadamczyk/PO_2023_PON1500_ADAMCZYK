@@ -50,4 +50,6 @@ public interface WorldMap extends MoveValidator {
     WorldElement objectAt(Vector2d position);
     Collection<WorldElement> getElements();
     UUID getId();
+
+    Boundary getCurrentBounds();
 }

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml">
+    <!-- Sekcja Map Properties -->
+    <TitledPane text="Map Properties" collapsible="false">
+        <VBox spacing="5">
+            <HBox spacing="10">
+                <Label text="Map Height:"/>
+                <TextField fx:id="mapHeightField" promptText="Enter number"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Max Width:"/>
+                <TextField fx:id="maxWidthField" promptText="Enter number"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Jungle Width:"/>
+                <TextField fx:id="jungleWidthField" promptText="Enter number"/>
+            </HBox>
+            <HBox spacing="10">
+            <HBox spacing="10">
+                <Label text="Jungle Height:"/>
+                <TextField fx:id="jungleHeightField" promptText="Enter number"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+
+    <!-- Sekcja Energy Properties -->
+    <TitledPane text="Energy Properties" collapsible="false">
+        <VBox spacing="5">
+            <HBox spacing="10">
+                <Label text="Grass Energy Profit:"/>
+                <TextField fx:id="grassEnergyProfitField" promptText="Enter number"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Minimum Energy to Copulation:"/>
+                <TextField fx:id="minEnergyCopulationField" promptText="Enter number"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Animal Start Energy:"/>
+                <TextField fx:id="animalStartEnergyField" promptText="Enter number"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Daily Energy Cost:"/>
+                <TextField fx:id="dailyEnergyCostField" promptText="Enter number"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+
+    <!-- Sekcja Spawning Properties -->
+    <TitledPane text="Spawning Properties" collapsible="false">
+        <VBox spacing="5">
+            <HBox spacing="10">
+                <Label text="Animals Spawning at the Start:"/>
+                <TextField fx:id="animalsSpawningStartField" promptText="Enter number"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Grass Spawned in Each Day:"/>
+                <TextField fx:id="grassSpawnedEachDayField" promptText="Enter number"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+
+    <!-- Sekcja Others -->
+    <TitledPane text="Others" collapsible="false">
+        <VBox spacing="5">
+            <HBox spacing="10">
+                <Label text="Real Refresh Time (ms):"/>
+                <TextField fx:id="realRefreshTimeField" promptText="Enter number"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+
+    <Button text="Submit" fx:id="submitButton"/>
+</VBox>

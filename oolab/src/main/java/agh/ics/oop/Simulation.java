@@ -57,8 +57,13 @@ public class Simulation {
                 System.out.println(e.getMessage());
             }
 //            System.out.println(map.toString());
+            try {
+                Thread.sleep(500); // Opóźnienie 500 ms
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-    }
 
+    }
 
 }
